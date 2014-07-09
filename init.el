@@ -227,8 +227,8 @@
 
 ;; --- perspective ------------------------------------------------------------
 
-(require-package 'perspective)
-(add-hook 'after-init-hook #'(lambda () (persp-mode 1)))
+;(require-package 'perspective)
+;(add-hook 'after-init-hook #'(lambda () (persp-mode 1)))
 
 
 ;; --- magit ------------------------------------------------------------------
@@ -467,12 +467,12 @@
 (define-key evil-normal-state-map ",p" 'project-explorer-open)
 
 ;; persp
-(define-key evil-normal-state-map ";w" 'persp-switch)
-(define-key evil-normal-state-map ";r" 'persp-rename)
-(define-key evil-normal-state-map ";k" 'persp-kill)
-(define-key evil-normal-state-map ",a" 'persp-add-buffer)
-(define-key evil-normal-state-map ",i" 'persp-import)
-(define-key evil-normal-state-map ",k" 'persp-remove-buffer)
+;(define-key evil-normal-state-map ";w" 'persp-switch)
+;(define-key evil-normal-state-map ";r" 'persp-rename)
+;(define-key evil-normal-state-map ";k" 'persp-kill)
+;(define-key evil-normal-state-map ",a" 'persp-add-buffer)
+;(define-key evil-normal-state-map ",i" 'persp-import)
+;(define-key evil-normal-state-map ",k" 'persp-remove-buffer)
 
 ;; splits
 (define-key evil-normal-state-map ",s" 'split-window-below)
