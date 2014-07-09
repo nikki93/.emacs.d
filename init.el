@@ -59,16 +59,19 @@
 
 ;; --- theme ------------------------------------------------------------------
 
-(require-package 'color-theme-sanityinc-tomorrow)
-(load-theme 'sanityinc-tomorrow-night t)
+;(require-package 'color-theme-sanityinc-tomorrow)
+;(load-theme 'sanityinc-tomorrow-night t)
 
 ;(require-package 'leuven-theme)
 ;(load-theme 'leuven t)
 
 ;(require-package 'soothe-theme)
 
-;(require-package 'hemisu-theme)
-;(load-theme 'hemisu-dark t)
+;(require-package 'zonokai-theme)
+;(load-theme 'zonokai t)
+
+(require-package 'monokai-theme)
+(load-theme 'monokai t)
 
 
 ;; --- evil -------------------------------------------------------------------
