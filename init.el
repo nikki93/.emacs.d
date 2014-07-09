@@ -352,15 +352,6 @@
 (require-package 'js2-mode)
 
 
-;; --- rainbow-identifiers ----------------------------------------------------
-
-(require-package 'rainbow-identifiers)
-(setq rainbow-identifiers-faces-to-override '(font-lock-type-face font-lock-variable-name-face))
-;(setq rainbow-identifiers-choose-face-function 'rainbow-identifiers-cie-l*a*b*-choose-face)
-(setq rainbow-identifiers-choose-face-function 'rainbow-identifiers-predefined-choose-face)
-(add-hook 'prog-mode-hook 'rainbow-identifiers-mode)
-
-
 ;; ----------------------------------------------------------------------------
 ;; languages
 ;; ----------------------------------------------------------------------------
