@@ -131,23 +131,23 @@
 
 ;; --- flx-ido ----------------------------------------------------------------
 
-(require-package 'flx-ido)
-(ido-mode 1)
-(ido-everywhere 1)
-(flx-ido-mode 1)
-(setq ido-use-faces nil)
+;(require-package 'flx-ido)
+;(ido-mode 1)
+;(ido-everywhere 1)
+;(flx-ido-mode 1)
+;(setq ido-use-faces nil)
 
 
 ;; --- ido-ubiquitos ----------------------------------------------------------
 
-(require-package 'ido-ubiquitous)
-(ido-ubiquitous-mode)
+;(require-package 'ido-ubiquitous)
+;(ido-ubiquitous-mode)
 
 
 ;; --- smex -------------------------------------------------------------------
 
-(require-package 'smex)
-(smex-initialize)
+;(require-package 'smex)
+;(smex-initialize)
 
 
 ;; --- projectile -------------------------------------------------------------
@@ -155,6 +155,58 @@
 (require-package 'projectile)
 (projectile-global-mode)
 (setq projectile-enable-caching t)
+
+
+;; --- helm -------------------------------------------------------------------
+
+(require-package 'helm)
+(setq helm-command-prefix-key "C-c h")
+
+(require 'helm-config)
+(require 'helm-eshell)
+(require 'helm-files)
+(require 'helm-grep)
+(require-package 'helm-projectile)
+
+(setq
+ helm-scroll-amount 4
+ helm-quick-update t
+ helm-ff-search-library-in-sexp t
+
+ helm-split-window-default-side 'other
+ helm-split-window-in-side-p t
+ helm-candidate-number-limit 200
+ helm-M-x-requires-pattern 0
+ helm-ff-file-name-history-use-recentf t
+ helm-move-to-line-cycle-in-source t
+
+ ido-use-virtual-buffers t
+ helm-buffers-fuzzy-matching t)
+
+; keys to launch helm
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "M-y") 'helm-show-kill-ring)
+(global-set-key (kbd "C-x b") 'helm-mini)
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
+(define-key evil-normal-state-map ",f" 'helm-projectile)
+(define-key evil-normal-state-map " " 'helm-projectile)
+(global-set-key (kbd "C-c h o") 'helm-occur)
+(define-key evil-normal-state-map ",o" 'helm-occur)
+(add-hook 'eshell-mode-hook
+          #'(lambda ()
+              (progn
+                (define-key eshell-mode-map [remap pcomplete] 'helm-esh-pcomplete)
+                (define-key eshell-mode-map (kbd "C-r")  'helm-eshell-history))))
+
+; keys in helm
+(define-key helm-map (kbd "C-k") 'helm-previous-line)
+(define-key helm-map (kbd "C-j") 'helm-next-line)
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+(define-key helm-find-files-map (kbd "C-h") 'helm-find-files-up-one-level)
+(define-key helm-find-files-map (kbd "C-l") 'helm-execute-persistent-action)
+
+; go!
+(helm-mode 1)
 
 
 ;; --- project-explorer -------------------------------------------------------
@@ -355,6 +407,18 @@
 (require-package 'js2-mode)
 
 
+;; --- ggtags -----------------------------------------------------------------
+
+(require-package 'ggtags)
+
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
+              (ggtags-mode 1))))
+(define-key evil-normal-state-map (kbd "M-.") 'ggtags-find-tag-dwim)
+(define-key evil-normal-state-map (kbd "C-]") 'ggtags-find-tag-dwim)
+
+
 ;; ----------------------------------------------------------------------------
 ;; languages
 ;; ----------------------------------------------------------------------------
@@ -457,22 +521,9 @@
 ;; ----------------------------------------------------------------------------
 
 ;; find
-(define-key evil-normal-state-map ",f" 'projectile-find-file)
-(define-key evil-normal-state-map " " 'projectile-find-file)
 
 ;; apps
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
 (define-key evil-normal-state-map ",t" 'eshell)
-(define-key evil-normal-state-map ",p" 'project-explorer-open)
-
-;; persp
-;(define-key evil-normal-state-map ";w" 'persp-switch)
-;(define-key evil-normal-state-map ";r" 'persp-rename)
-;(define-key evil-normal-state-map ";k" 'persp-kill)
-;(define-key evil-normal-state-map ",a" 'persp-add-buffer)
-;(define-key evil-normal-state-map ",i" 'persp-import)
-;(define-key evil-normal-state-map ",k" 'persp-remove-buffer)
 
 ;; splits
 (define-key evil-normal-state-map ",s" 'split-window-below)
@@ -490,6 +541,7 @@
 (define-key evil-normal-state-map "\C-n" nil)
 (global-set-key (kbd "C-n") 'next-buffer)
 
+;; cgame
 (setq cgame-path "/Users/nikki/Development/cgame/")
 (setq cgame-scratch-path (concat cgame-path "/usr/scratch.lua"))
 (defun cgame-scratch (&optional start end)
