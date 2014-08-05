@@ -150,6 +150,21 @@
 ;(smex-initialize)
 
 
+;; --- ag ---------------------------------------------------------------------
+
+(require-package 'ag)
+(add-to-list 'evil-motion-state-modes 'ag-mode)
+(setq ag-highlight-search t)
+(defun eshell/ag (&rest args)
+  (compilation-start
+   (mapconcat 'shell-quote-argument
+              (append (list ag-executable
+                            "--color" "--color-match" "30;43"
+                            "--smart-case" "--nogroup" "--column" "--")
+                      args) " ")
+   'ag-mode))
+
+
 ;; --- projectile -------------------------------------------------------------
 
 (require-package 'projectile)
@@ -165,7 +180,6 @@
 (require 'helm-config)
 (require 'helm-eshell)
 (require 'helm-files)
-(require 'helm-grep)
 (require-package 'helm-projectile)
 
 (setq
@@ -194,9 +208,11 @@
 (define-key evil-normal-state-map ",o" 'helm-occur)
 (add-hook 'eshell-mode-hook
           #'(lambda ()
-              (progn
-                (define-key eshell-mode-map [remap pcomplete] 'helm-esh-pcomplete)
-                (define-key eshell-mode-map (kbd "C-r")  'helm-eshell-history))))
+              (define-key eshell-mode-map
+                [remap eshell-pcomplete]
+                'helm-esh-pcomplete)))
+(add-hook 'eshell-mode-hook
+          #'(lambda () (define-key eshell-mode-map (kbd "M-l")  'helm-eshell-history)))
 
 ; keys in helm
 (define-key helm-map (kbd "C-k") 'helm-previous-line)
