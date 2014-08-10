@@ -217,6 +217,8 @@
 ; keys in helm
 (define-key helm-map (kbd "C-k") 'helm-previous-line)
 (define-key helm-map (kbd "C-j") 'helm-next-line)
+(define-key helm-map (kbd "C-h") 'helm-previous-source)
+(define-key helm-map (kbd "C-l") 'helm-next-source)
 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
 (define-key helm-find-files-map (kbd "C-h") 'helm-find-files-up-one-level)
 (define-key helm-find-files-map (kbd "C-l") 'helm-execute-persistent-action)
@@ -433,6 +435,17 @@
               (ggtags-mode 1))))
 (define-key evil-normal-state-map (kbd "M-.") 'ggtags-find-tag-dwim)
 (define-key evil-normal-state-map (kbd "C-]") 'ggtags-find-tag-dwim)
+
+
+;; --- slime ------------------------------------------------------------------
+
+;; setup load-path and autoloads
+;;(add-to-list 'load-path "~/.emacs.d/elpa/slime-20140804.1449/")
+(require 'slime-autoloads)
+
+;; Set your lisp system and, optionally, some contribs
+(setq inferior-lisp-program "/usr/local/bin/clisp")
+(setq slime-contribs '(slime-fancy))
 
 
 ;; ----------------------------------------------------------------------------
