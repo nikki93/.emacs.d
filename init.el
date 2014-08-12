@@ -447,6 +447,52 @@
 (setq inferior-lisp-program "/usr/local/bin/clisp")
 (setq slime-contribs '(slime-fancy))
 
+(require-package 'ac-slime)
+(add-hook 'slime-mode-hook 'set-up-slime-ac)
+(add-hook 'slime-repl-mode-hook 'set-up-slime-ac)
+(eval-after-load "auto-complete"
+  '(add-to-list 'ac-modes 'slime-repl-mode))
+
+
+;; --- paredit ----------------------------------------------------------------
+
+(require-package 'paredit)
+(defun enable-paredit-mode () (paredit-mode 1))
+(add-hook 'clojure-mode-hook 'enable-paredit-mode)
+(add-hook 'cider-repl-mode-hook 'enable-paredit-mode)
+(add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
+(add-hook 'eval-expression-minibuffer-setup-hook 'enable-paredit-mode)
+(add-hook 'ielm-mode-hook 'enable-paredit-mode)
+(add-hook 'lisp-mode-hook 'enable-paredit-mode)
+(add-hook 'lisp-interaction-mode-hook 'enable-paredit-mode)
+(add-hook 'scheme-mode-hook 'enable-paredit-mode)
+(add-hook 'slime-repl-mode-hook (lambda () (paredit-mode +1)))
+(defun override-slime-repl-bindings-with-paredit ()
+  (define-key slime-repl-mode-map
+    (read-kbd-macro paredit-backward-delete-key) nil))
+(add-hook 'slime-repl-mode-hook 'override-slime-repl-bindings-with-paredit)
+
+(require-package 'evil-paredit)
+(add-hook 'paredit-mode-hook 'evil-paredit-mode)
+(setq evil-cross-lines t)
+(setq evil-move-cursor-back nil)
+(evil-define-motion evil-forward-sexp (count)
+                    (if (paredit-in-string-p)
+                      (evil-forward-word-end count)
+                      (paredit-forward count)))
+(evil-define-motion evil-backward-sexp (count)
+                    (if (paredit-in-string-p)
+                      (evil-backward-word-begin)
+                      (paredit-backward count)))
+(evil-define-motion evil-forward-sexp-word (count)
+                    (if (paredit-in-string-p)
+                      (evil-forward-word-begin count)
+                      (progn (paredit-forward count)
+                             (skip-chars-forward "[:space:]"))))
+(define-key evil-motion-state-map "w" 'evil-forward-sexp-word)
+(define-key evil-motion-state-map "e" 'evil-forward-sexp)
+(define-key evil-motion-state-map "b" 'evil-backward-sexp)
+
 
 ;; ----------------------------------------------------------------------------
 ;; languages
