@@ -446,6 +446,7 @@
 ;; Set your lisp system and, optionally, some contribs
 (setq inferior-lisp-program "/usr/local/bin/clisp")
 (setq slime-contribs '(slime-fancy))
+(setq slime-repl-return-behaviour :send-only-if-after-complete)
 
 (require-package 'ac-slime)
 (add-hook 'slime-mode-hook 'set-up-slime-ac)
@@ -453,6 +454,24 @@
 (eval-after-load "auto-complete"
   '(add-to-list 'ac-modes 'slime-repl-mode))
 
+
+;; --- cider ------------------------------------------------------------------
+
+(require-package 'cider)
+(add-hook 'cider-repl-mode-hook 'paredit-mode)
+
+(require-package 'ac-cider)
+(add-hook 'cider-mode-hook 'ac-flyspell-workaround)
+(add-hook 'cider-mode-hook 'ac-cider-setup)
+(add-hook 'cider-repl-mode-hook 'ac-cider-setup)
+(add-hook 'cider-repl-mode-hook 'auto-complete-mode)
+(eval-after-load "auto-complete"
+                 '(add-to-list 'ac-modes 'cider-mode))
+
+(defun set-auto-complete-as-completion-at-point-function ()
+  (setq completion-at-point-functions '(auto-complete)))
+(add-hook 'auto-complete-mode-hook 'set-auto-complete-as-completion-at-point-function)
+(add-hook 'cider-mode-hook 'set-auto-complete-as-completion-at-point-function)
 
 ;; --- paredit ----------------------------------------------------------------
 
@@ -471,6 +490,9 @@
   (define-key slime-repl-mode-map
     (read-kbd-macro paredit-backward-delete-key) nil))
 (add-hook 'slime-repl-mode-hook 'override-slime-repl-bindings-with-paredit)
+(define-key slime-mode-map [(?\()] 'paredit-open-list)
+(define-key slime-mode-map [(?\))] 'paredit-close-list)
+(define-key slime-mode-map [(return)] 'paredit-newline)
 
 (require-package 'evil-paredit)
 (add-hook 'paredit-mode-hook 'evil-paredit-mode)
