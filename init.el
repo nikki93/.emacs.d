@@ -65,6 +65,9 @@
 ;(require-package 'leuven-theme)
 ;(load-theme 'leuven t)
 
+;(require-package 'cyberpunk-theme)
+;(load-theme 'cyberpunk t)
+
 ;(require-package 'soothe-theme)
 
 ;(require-package 'zonokai-theme)
@@ -229,9 +232,9 @@
 
 ;; --- project-explorer -------------------------------------------------------
 
-(require-package 'project-explorer)
-(add-to-list 'evil-emacs-state-modes 'project-explorer-mode)
-(setq pe/width 23)
+;(require-package 'project-explorer)
+;(add-to-list 'evil-emacs-state-modes 'project-explorer-mode)
+;(setq pe/width 23)
 
 
 ;; --- yasnippet --------------------------------------------------------------
@@ -453,7 +456,7 @@
 (add-hook 'csharp-mode-hook 'omnisharp-mode)
 (add-hook 'csharp-mode-hook (lambda () (setq omnisharp--auto-complete-display-backend nil)))
 
-(setq omnisharp-server-executable-path "/Users/nikhileshsigatapu/Development/OmniSharpServer/OmniSharp/bin/Debug/OmniSharp.exe")
+(setq omnisharp-server-executable-path "/Users/nikki/Development/OmniSharpServer/OmniSharp/bin/Debug/OmniSharp.exe")
 
 (evil-define-key 'insert omnisharp-mode-map (kbd "M-.") 'omnisharp-auto-complete)
 (evil-define-key 'normal omnisharp-mode-map (kbd "<f12>") 'omnisharp-go-to-definition)
@@ -557,6 +560,17 @@
 (define-key evil-motion-state-map "w" 'evil-forward-sexp-word)
 (define-key evil-motion-state-map "e" 'evil-forward-sexp)
 (define-key evil-motion-state-map "b" 'evil-backward-sexp)
+
+;; --- neotree ----------------------------------------------------------------
+
+(require-package 'neotree)
+(global-set-key [f8] 'neotree-toggle)
+(add-hook 'neotree-mode-hook
+          (lambda ()
+            (define-key evil-normal-state-local-map (kbd "TAB") 'neotree-enter)
+            (define-key evil-normal-state-local-map (kbd "SPC") 'neotree-enter)
+            (define-key evil-normal-state-local-map (kbd "q") 'neotree-hide)
+            (define-key evil-normal-state-local-map (kbd "RET") 'neotree-enter)))
 
 
 ;; ----------------------------------------------------------------------------
