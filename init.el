@@ -393,12 +393,6 @@
 (setq reftex-plug-into-AUCTeX t)
 
 
-;; --- maxframe ---------------------------------------------------------------
-
-(require-package 'maxframe)
-(when (eq system-type 'darwin) (add-hook 'window-setup-hook 'maximize-frame t))
-
-
 ;; --- web-mode ---------------------------------------------------------------
 
 (require-package 'web-mode)
@@ -648,10 +642,6 @@
 (add-hook 'gud-mode-hook 'disable-scroll-margin)
 (add-hook 'magit-mode-hook 'disable-scroll-margin)
 
-;; font
-(when (eq system-type 'darwin) (set-face-fohnt 'default "-apple-Menlo-medium-normal-normal-*-11-*-*-*-m-0-iso10646-1"))
-(when (or (eq system-type 'windows-nt) (eq system-type 'cygwin)) (set-face-attribute 'default nil :font "Consolas-10"))
-
 ;; gdb
 (setq gdb-many-windows t)
 
@@ -783,3 +773,10 @@ save it in `ffap-file-at-point-line-number' variable."
   (when ffap-file-at-point-line-number
     (goto-line ffap-file-at-point-line-number)
     (setq ffap-file-at-point-line-number nil)))
+
+
+;; ----------------------------------------------------------------------------
+;; run local.el for computer-specific settings
+;; ----------------------------------------------------------------------------
+
+(when (file-exists-p "~/.emacs.d/local.el") (load-file "~/.emacs.d/local.el"))
