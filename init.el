@@ -396,7 +396,7 @@
 ;; --- maxframe ---------------------------------------------------------------
 
 (require-package 'maxframe)
-(add-hook 'window-setup-hook 'maximize-frame t)
+(when (eq system-type 'darwin) (add-hook 'window-setup-hook 'maximize-frame t))
 
 
 ;; --- web-mode ---------------------------------------------------------------
@@ -649,9 +649,8 @@
 (add-hook 'magit-mode-hook 'disable-scroll-margin)
 
 ;; font
-(defvar *default-font*
-  "-apple-Menlo-medium-normal-normal-*-11-*-*-*-m-0-iso10646-1")
-(when window-system (set-face-font 'default *default-font*))
+(when (eq system-type 'darwin) (set-face-fohnt 'default "-apple-Menlo-medium-normal-normal-*-11-*-*-*-m-0-iso10646-1"))
+(when (or (eq system-type 'windows-nt) (eq system-type 'cygwin)) (set-face-attribute 'default nil :font "Consolas-10"))
 
 ;; gdb
 (setq gdb-many-windows t)
