@@ -230,13 +230,6 @@
 (helm-mode 1)
 
 
-;; --- project-explorer -------------------------------------------------------
-
-;(require-package 'project-explorer)
-;(add-to-list 'evil-emacs-state-modes 'project-explorer-mode)
-;(setq pe/width 23)
-
-
 ;; --- yasnippet --------------------------------------------------------------
 
 (require-package 'yasnippet)
@@ -509,63 +502,36 @@
 
 ;; --- cider ------------------------------------------------------------------
 
-;; (require-package 'cider)
-;; (add-hook 'cider-repl-mode-hook 'paredit-mode)
+(require-package 'cider)
 
-;; (require-package 'ac-cider)
-;; (add-hook 'cider-mode-hook 'ac-flyspell-workaround)
-;; (add-hook 'cider-mode-hook 'ac-cider-setup)
-;; (add-hook 'cider-repl-mode-hook 'ac-cider-setup)
-;; (add-hook 'cider-repl-mode-hook 'auto-complete-mode)
-;; (eval-after-load "auto-complete"
-;;                  '(add-to-list 'ac-modes 'cider-mode))
+(setq cider-repl-use-clojure-font-lock t) ; syntax highlighting in REPL
+(add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode) ; argument hints
+(add-hook 'cider-repl-mode-hook 'subword-mode) ; CamelCase word jumps
 
-;; (defun set-auto-complete-as-completion-at-point-function ()
-;;   (setq completion-at-point-functions '(auto-complete)))
-;; (add-hook 'auto-complete-mode-hook 'set-auto-complete-as-completion-at-point-function)
-;; (add-hook 'cider-mode-hook 'set-auto-complete-as-completion-at-point-function)
+;; smartparens!
+(add-hook 'clojure-mode-hook 'smartparens-strict-mode)
+(add-hook 'cider-repl-mode-hook 'smartparens-strict-mode)
 
-;; --- paredit ----------------------------------------------------------------
+;; autocompletion
+(add-hook 'cider-mode-hook 'company-mode)
+(add-hook 'cider-repl-mode-hook 'company-mode)
 
-(require-package 'paredit)
-(defun enable-paredit-mode () (paredit-mode 1))
-(add-hook 'clojure-mode-hook 'enable-paredit-mode)
-(add-hook 'cider-repl-mode-hook 'enable-paredit-mode)
-(add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
-(add-hook 'eval-expression-minibuffer-setup-hook 'enable-paredit-mode)
-(add-hook 'ielm-mode-hook 'enable-paredit-mode)
-(add-hook 'lisp-mode-hook 'enable-paredit-mode)
-(add-hook 'lisp-interaction-mode-hook 'enable-paredit-mode)
-(add-hook 'scheme-mode-hook 'enable-paredit-mode)
-(add-hook 'slime-repl-mode-hook (lambda () (paredit-mode +1)))
-(defun override-slime-repl-bindings-with-paredit ()
-  (define-key slime-repl-mode-map
-    (read-kbd-macro paredit-backward-delete-key) nil))
-(add-hook 'slime-repl-mode-hook 'override-slime-repl-bindings-with-paredit)
-(define-key slime-mode-map [(?\()] 'paredit-open-list)
-(define-key slime-mode-map [(?\))] 'paredit-close-list)
-(define-key slime-mode-map [(return)] 'paredit-newline)
+;; don't show '^M's in repl
+(defun remove-dos-eol ()
+  "Do not show ^M in files containing mixed UNIX and DOS line endings."
+  (interactive)
+  (setq buffer-display-table (make-display-table))
+  (aset buffer-display-table ?\^M []))
+(add-hook 'cider-repl-mode-hook 'remove-dos-eol)
 
-(require-package 'evil-paredit)
-(add-hook 'paredit-mode-hook 'evil-paredit-mode)
-(setq evil-cross-lines t)
-(setq evil-move-cursor-back nil)
-(evil-define-motion evil-forward-sexp (count)
-                    (if (paredit-in-string-p)
-                      (evil-forward-word-end count)
-                      (paredit-forward count)))
-(evil-define-motion evil-backward-sexp (count)
-                    (if (paredit-in-string-p)
-                      (evil-backward-word-begin)
-                      (paredit-backward count)))
-(evil-define-motion evil-forward-sexp-word (count)
-                    (if (paredit-in-string-p)
-                      (evil-forward-word-begin count)
-                      (progn (paredit-forward count)
-                             (skip-chars-forward "[:space:]"))))
-(define-key evil-motion-state-map "w" 'evil-forward-sexp-word)
-(define-key evil-motion-state-map "e" 'evil-forward-sexp)
-(define-key evil-motion-state-map "b" 'evil-backward-sexp)
+
+;; --- neotree ----------------------------------------------------------------
+
+(require-package 'smartparens)
+(smartparens-global-mode t)
+(require 'smartparens-config)
+(sp-use-smartparens-bindings)
+
 
 ;; --- neotree ----------------------------------------------------------------
 
