@@ -1,13 +1,13 @@
 ;; set exec-path from $PATH
-(defun set-exec-path-from-shell-PATH ()
-  "Sets the exec-path to the same value used by the user shell"
-  (let ((path-from-shell
-	 (replace-regexp-in-string
-	  "[[:space:]\n]*$" ""
-	  (shell-command-to-string "$SHELL -l -c 'echo $PATH'"))))
-    (setenv "PATH" path-from-shell)
-    (setq exec-path (split-string path-from-shell path-separator))))
-(set-exec-path-from-shell-PATH)
+;(defun set-exec-path-from-shell-PATH ()
+;  "Sets the exec-path to the same value used by the user shell"
+;  (let ((path-from-shell
+;	 (replace-regexp-in-string
+;	  "[[:space:]\n]*$" ""
+;	  (shell-command-to-string "$SHELL -l -c 'echo $PATH'"))))
+;    (setenv "PATH" path-from-shell)
+;    (setq exec-path (split-string path-from-shell path-separator))))
+;(set-exec-path-from-shell-PATH)
 
 ;; ----------------------------------------------------------------------------
 ;; .clang_complete reading
@@ -445,8 +445,10 @@
 (add-to-list 'company-backends 'company-omnisharp)
 (setq company-idle-delay 0.2)
 (add-hook 'csharp-mode-hook 'company-mode)
-(define-key company-active-map (kbd "C-n") 'company-select-next)
-(define-key company-active-map (kbd "C-p") 'company-select-previous)
+(define-key company-active-map (kbd "\C-n") 'company-select-next)
+(define-key company-active-map (kbd "\C-p") 'company-select-previous)
+(define-key company-active-map (kbd "\C-d") 'company-show-doc-buffer)
+(define-key company-active-map (kbd "<tab>") 'company-complete)
 
 
 ;; --- omnisharp --------------------------------------------------------------
@@ -486,18 +488,15 @@
 
 ;; setup load-path and autoloads
 ;;(add-to-list 'load-path "~/.emacs.d/elpa/slime-20140804.1449/")
+(require-package 'slime)
 (require 'slime-autoloads)
 
 ;; Set your lisp system and, optionally, some contribs
-(setq inferior-lisp-program "/usr/local/bin/clisp")
 (setq slime-contribs '(slime-fancy))
 (setq slime-repl-return-behaviour :send-only-if-after-complete)
 
-(require-package 'ac-slime)
-(add-hook 'slime-mode-hook 'set-up-slime-ac)
-(add-hook 'slime-repl-mode-hook 'set-up-slime-ac)
-(eval-after-load "auto-complete"
-  '(add-to-list 'ac-modes 'slime-repl-mode))
+(require-package 'slime-company)
+(slime-setup '(slime-company))
 
 
 ;; --- cider ------------------------------------------------------------------
