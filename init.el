@@ -487,16 +487,10 @@
 ;; --- slime ------------------------------------------------------------------
 
 ;; setup load-path and autoloads
-;;(add-to-list 'load-path "~/.emacs.d/elpa/slime-20140804.1449/")
-(require-package 'slime)
+(add-to-list 'load-path "~/quicklisp/dists/quicklisp/software/slime-2.10.1")
 (require 'slime-autoloads)
-
-;; Set your lisp system and, optionally, some contribs
-(setq slime-contribs '(slime-fancy))
+(setq slime-contribs '(slime-fancy slime-company))
 (setq slime-repl-return-behaviour :send-only-if-after-complete)
-
-(require-package 'slime-company)
-(slime-setup '(slime-company))
 
 
 ;; --- cider ------------------------------------------------------------------
