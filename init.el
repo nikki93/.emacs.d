@@ -1,14 +1,3 @@
-;; set exec-path from $PATH
-;(defun set-exec-path-from-shell-PATH ()
-;  "Sets the exec-path to the same value used by the user shell"
-;  (let ((path-from-shell
-;	 (replace-regexp-in-string
-;	  "[[:space:]\n]*$" ""
-;	  (shell-command-to-string "$SHELL -l -c 'echo $PATH'"))))
-;    (setenv "PATH" path-from-shell)
-;    (setq exec-path (split-string path-from-shell path-separator))))
-;(set-exec-path-from-shell-PATH)
-
 ;; ----------------------------------------------------------------------------
 ;; .clang_complete reading
 ;; ----------------------------------------------------------------------------
@@ -435,7 +424,7 @@
           (lambda ()
             (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
               (ggtags-mode 1))))
-(define-key evil-normal-state-map (kbd "M-.") 'ggtags-find-tag-dwim)
+(define-key evil-normal-state-map (kbd "M-.") nil)
 (define-key evil-normal-state-map (kbd "C-]") 'ggtags-find-tag-dwim)
 
 
@@ -489,7 +478,7 @@
 ;; setup load-path and autoloads
 (add-to-list 'load-path "~/quicklisp/dists/quicklisp/software/slime-2.10.1")
 (require 'slime-autoloads)
-(setq slime-contribs '(slime-fancy slime-company))
+(setq slime-contribs '(slime-fancy slime-company slime-highlight-edits))
 (setq slime-repl-return-behaviour :send-only-if-after-complete)
 
 
@@ -500,10 +489,6 @@
 (setq cider-repl-use-clojure-font-lock t) ; syntax highlighting in REPL
 (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode) ; argument hints
 (add-hook 'cider-repl-mode-hook 'subword-mode) ; CamelCase word jumps
-
-;; smartparens!
-(add-hook 'clojure-mode-hook 'smartparens-strict-mode)
-(add-hook 'cider-repl-mode-hook 'smartparens-strict-mode)
 
 ;; autocompletion
 (add-hook 'cider-mode-hook 'company-mode)
@@ -518,12 +503,14 @@
 (add-hook 'cider-repl-mode-hook 'remove-dos-eol)
 
 
-;; --- neotree ----------------------------------------------------------------
+;; --- smartparents -----------------------------------------------------------
 
-(require-package 'smartparens)
-(smartparens-global-mode t)
-(require 'smartparens-config)
-(sp-use-smartparens-bindings)
+;(require-package 'smartparens)
+;(smartparens-global-mode t)
+;(require 'smartparens-config)
+;(sp-use-smartparens-bindings)
+;(add-hook 'clojure-mode-hook 'smartparens-strict-mode)
+;(add-hook 'cider-repl-mode-hook 'smartparens-strict-mode)
 
 
 ;; --- neotree ----------------------------------------------------------------
@@ -536,6 +523,36 @@
             (define-key evil-normal-state-local-map (kbd "SPC") 'neotree-enter)
             (define-key evil-normal-state-local-map (kbd "q") 'neotree-hide)
             (define-key evil-normal-state-local-map (kbd "RET") 'neotree-enter)))
+
+
+;; --- paredit, paxedit -------------------------------------------------------
+
+(require-package 'paxedit)
+;; (require-package 'evil-paredit)
+(add-hook 'lisp-mode-hook 'paredit-mode)
+;; (add-hook 'lisp-mode-hook 'evil-paredit-mode)
+(add-hook 'slime-repl-mode-hook 'enable-paredit-mode)
+(defun override-slime-repl-bindings-with-paredit ()
+   (define-key slime-repl-mode-map
+        (read-kbd-macro paredit-backward-delete-key)
+            nil))
+    (add-hook 'slime-repl-mode-hook 'override-slime-repl-bindings-with-paredit)
+
+(add-hook 'lisp-mode-hook 'paxedit-mode)
+(eval-after-load "paxedit"
+                 '(progn (define-key paxedit-mode-map (kbd "M-<right>") 'paxedit-transpose-forward)
+                         (define-key paxedit-mode-map (kbd "M-<left>") 'paxedit-transpose-backward)
+                         (define-key paxedit-mode-map (kbd "M-<up>") 'paxedit-backward-up)
+                         (define-key paxedit-mode-map (kbd "M-<down>") 'paxedit-backward-end)
+                         (define-key paxedit-mode-map (kbd "M-b") 'paxedit-previous-symbol)
+                         (define-key paxedit-mode-map (kbd "M-f") 'paxedit-next-symbol)
+                         (define-key paxedit-mode-map (kbd "C-%") 'paxedit-copy)
+                         (define-key paxedit-mode-map (kbd "C-&") 'paxedit-kill)
+                         (define-key paxedit-mode-map (kbd "C-*") 'paxedit-delete)
+                         (define-key paxedit-mode-map (kbd "C-^") 'paxedit-sexp-raise)
+                         (define-key paxedit-mode-map (kbd "M-u") 'paxedit-symbol-change-case)
+                         (define-key paxedit-mode-map (kbd "C-@") 'paxedit-symbol-copy)
+                         (define-key paxedit-mode-map (kbd "C-#") 'paxedit-symbol-kill)))
 
 
 ;; ----------------------------------------------------------------------------
