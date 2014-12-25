@@ -324,6 +324,13 @@
 
 (require-package 'window-numbering)
 (window-numbering-mode)
+(global-set-key (kbd "C-c 1") 'select-window-1)
+(global-set-key (kbd "C-c 2") 'select-window-2)
+(global-set-key (kbd "C-c 3") 'select-window-3)
+(global-set-key (kbd "C-c 4") 'select-window-4)
+(global-set-key (kbd "C-c 5") 'select-window-5)
+(global-set-key (kbd "C-c 6") 'select-window-6)
+(global-set-key (kbd "C-c 7") 'select-window-7)
 
 
 ;; --- buffer-move ------------------------------------------------------------
